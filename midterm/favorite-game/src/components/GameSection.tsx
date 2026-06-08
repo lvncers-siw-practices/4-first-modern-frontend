@@ -1,7 +1,7 @@
 import { useState } from "react";
 import GameCard from "./GameCard";
 
-type Platform = "DS" | "3DS" | "PC" | "PS4" | "Smartphone";
+type Platform = "DS" | "3DS" | "PS4" | "PC" | "Smartphone";
 
 type FilterPlatform = "all" | Platform;
 
@@ -13,29 +13,33 @@ type GameEntry = {
   url: string;
   releaseDate: string;
   playDate: string;
+  description: string;
 };
 
 const FAVORITE_GAMES: GameEntry[] = [
   {
     title: "Newスーパーマリオブラザーズ",
     platform: "DS",
-    url: "https://www.nintendo.co.jp/ds/avcj/index.html",
+    url: "https://www.nintendo.co.jp/ds/a2dj/index.html",
     releaseDate: "2006-05-25",
     playDate: "2007",
+    description: "初めて遊んだゲーム。",
   },
   {
     title: "妖怪ウォッチ",
     platform: "3DS",
-    url: "https://www.youkaiwatch.jp/",
+    url: "https://www.youkai-watch.jp/yw/",
     releaseDate: "2013-07-11",
     playDate: "2014",
+    description: "初めてのRPG。",
   },
   {
-    title: "モンスターハンター 4",
+    title: "モンスターハンター4",
     platform: "3DS",
-    url: "https://www.capcom.co.jp/monsterhunter/4/",
+    url: "https://www.capcom-games.com/product/ja-jp/monsterhunter4/",
     releaseDate: "2013-09-14",
     playDate: "2014",
+    description: "友達と一緒に遊んだアクションゲーム。",
   },
   {
     title: "MINECRAFT",
@@ -43,6 +47,7 @@ const FAVORITE_GAMES: GameEntry[] = [
     url: "https://www.minecraft.net/ja-jp",
     releaseDate: "2011-11-18",
     playDate: "2016",
+    description: "世界を自由に作ることにハマった。",
   },
   {
     title: "DARK SOULS 3",
@@ -50,6 +55,7 @@ const FAVORITE_GAMES: GameEntry[] = [
     url: "https://www.darksouls.jp/",
     releaseDate: "2016-03-24",
     playDate: "2016",
+    description: "初めての4にゲー。",
   },
   {
     title: "PUBG",
@@ -57,13 +63,15 @@ const FAVORITE_GAMES: GameEntry[] = [
     url: "https://pubg.com/ja",
     releaseDate: "2017-12-21",
     playDate: "2018",
+    description: "初めて本格的なバトロワをプレイしたFPS。",
   },
   {
     title: "Escape from Tarkov",
     platform: "PC",
     url: "https://www.escapefromtarkov.com/",
     releaseDate: "2017-07-27",
-    playDate: "2020",
+    playDate: "2021",
+    description: "ハードコアなエクストラクションシューターにハマった。",
   },
   {
     title: "Azur Lane",
@@ -71,41 +79,26 @@ const FAVORITE_GAMES: GameEntry[] = [
     url: "https://azurlane.jp/",
     releaseDate: "2017-09-30",
     playDate: "2018",
+    description: "美少女スマホゲームにハマった。",
   },
 ];
 
-function compareGames(a: GameEntry, b: GameEntry, sortKey: SortKey) {
-  if (sortKey === "release") {
-    const releaseCompare = a.releaseDate.localeCompare(b.releaseDate);
+const GAMES_BY_PLAY = [...FAVORITE_GAMES].sort((a, b) =>
+  a.playDate.localeCompare(b.playDate),
+);
 
-    if (releaseCompare !== 0) {
-      return releaseCompare;
-    }
-
-    return a.playDate.localeCompare(b.playDate);
-  }
-
-  const playCompare = a.playDate.localeCompare(b.playDate);
-
-  if (playCompare !== 0) {
-    return playCompare;
-  }
-
-  return a.releaseDate.localeCompare(b.releaseDate);
-}
+const GAMES_BY_RELEASE = [...FAVORITE_GAMES].sort((a, b) =>
+  a.releaseDate.localeCompare(b.releaseDate),
+);
 
 export default function GameSection() {
   const [filter, setFilter] = useState<FilterPlatform>("all");
   const [sortKey, setSortKey] = useState<SortKey>("play");
 
-  const filteredGames =
-    filter === "all"
-      ? FAVORITE_GAMES
-      : FAVORITE_GAMES.filter((game) => game.platform === filter);
+  const games = sortKey === "play" ? GAMES_BY_PLAY : GAMES_BY_RELEASE;
 
-  const sortedGames = [...filteredGames].sort((a, b) =>
-    compareGames(a, b, sortKey),
-  );
+  const displayedGames =
+    filter === "all" ? games : games.filter((game) => game.platform === filter);
 
   return (
     <section className="info-card">
@@ -145,6 +138,12 @@ export default function GameSection() {
           >
             PS4
           </button>
+          <button
+            className={filter === "PC" ? "active" : ""}
+            onClick={() => setFilter("PC")}
+          >
+            PC
+          </button>
         </div>
 
         <div className="controls-sort">
@@ -154,18 +153,18 @@ export default function GameSection() {
           >
             プレイ年順
           </button>
+          <button
+            className={sortKey === "release" ? "active" : ""}
+            onClick={() => setSortKey("release")}
+          >
+            発売日順
+          </button>
         </div>
-        <button
-          className={sortKey === "release" ? "active" : ""}
-          onClick={() => setSortKey("release")}
-        >
-          発売日順
-        </button>
       </div>
 
-      {sortedGames.length > 0 ? (
+      {displayedGames.length > 0 ? (
         <div className="game-grid">
-          {sortedGames.map((game) => (
+          {displayedGames.map((game) => (
             <GameCard
               key={`${game.title}-${game.platform}`}
               title={game.title}
@@ -173,6 +172,7 @@ export default function GameSection() {
               url={game.url}
               releaseDate={game.releaseDate}
               playDate={game.playDate}
+              description={game.description}
             />
           ))}
         </div>

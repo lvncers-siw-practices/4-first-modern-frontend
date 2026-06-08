@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer className="footer">
       <p>
-        &copy; 2026{" "}
+        &copy; 2026
         <a
           className="footer-link"
           href="https://www.lvncer.dev/"

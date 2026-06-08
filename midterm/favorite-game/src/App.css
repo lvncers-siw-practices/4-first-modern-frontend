@@ -163,6 +163,13 @@ body {
   letter-spacing: 0.04em;
 }
 
+.game-grid-description {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #475569;
+}
+
 .game-grid-date {
   font-size: 12px;
   line-height: 1.5;

@@ -4,13 +4,8 @@ type GameCardProps = {
   url: string;
   releaseDate: string;
   playDate: string;
+  description: string;
 };
-
-function formatDate(isoDate: string) {
-  const [year, month, day] = isoDate.split("-");
-
-  return `${year}年${Number(month)}月${Number(day)}日`;
-}
 
 export default function GameCard({
   title,
@@ -18,6 +13,7 @@ export default function GameCard({
   url,
   releaseDate,
   playDate,
+  description,
 }: GameCardProps) {
   return (
     <a
@@ -28,7 +24,8 @@ export default function GameCard({
     >
       <span className="game-grid-title">{title}</span>
       <span className="game-grid-platform">{platform}</span>
-      <span className="game-grid-date">発売日：{formatDate(releaseDate)}</span>
+      <p className="game-grid-description">{description}</p>
+      <span className="game-grid-date">発売日：{releaseDate}</span>
       <span className="game-grid-date">プレイ年：{playDate}年</span>
     </a>
   );
